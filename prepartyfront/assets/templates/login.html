@@ -1,0 +1,35 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <title>Test</title>
+    <meta name="description" content="The HTML5 Herald">
+    <meta name="author" content="SitePoint">
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+    <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+<h1>LOGIN</h1>
+
+</body>
+
+<script>
+
+window.location.href = "https://www.facebook.com/dialog/oauth/?"
+                + "client_id=" + "992787620844475"
+                + "&redirect_uri=" + "http://localhost:8080/auth-web/code"
+                + "&display=page"
+                + "&response_type=code";
+</script>
+
+
+</html>

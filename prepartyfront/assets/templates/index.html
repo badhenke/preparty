@@ -1,0 +1,62 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <title>Test</title>
+    <meta name="description" content="The HTML5 Herald">
+    <meta name="author" content="SitePoint">
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+    <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+<h1>INDEX</h1>
+
+
+<script>
+
+function gup( name, url ) {
+    if (!url) url = location.href;
+    name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+    var regexS = "[\\?&]"+name+"=([^&#]*)";
+    var regex = new RegExp( regexS );
+    var results = regex.exec( url );
+    return results == null ? null : results[1];
+}
+
+var id = gup('id',window.location.href);
+var auth = gup('notauth',window.location.href);
+console.log("auth:" + auth)
+console.log(sessionStorage.getItem("id"))
+
+if(auth == null){
+  
+}else{
+  if(auth != 'true'){
+    window.location.href = 'http://localhost:3000/login'
+  }
+}
+if(!sessionStorage.getItem("id")){
+  if(!id){
+    window.location.href = 'http://localhost:3000/login'
+  }else{
+    sessionStorage.setItem("id", id)
+    console.log(sessionStorage.getItem("id"))
+  }
+}
+
+</script>
+
+</body>
+
+
+
+</html>
