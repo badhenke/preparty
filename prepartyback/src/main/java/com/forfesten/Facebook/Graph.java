@@ -58,5 +58,18 @@ public class Graph {
         }
     }
 
+    public static String GetProfilePictureUrl(String token){
+        String url = "https://graph.facebook.com/me?fields=picture&type=large&access_token="+token;
+        try {
+
+            String result = Request.Get(url);
+            JSONObject obj = new JSONObject(result);
+            return obj.getJSONObject("picture").getJSONObject("data").getString("url");
+
+        }catch (Exception e){
+            return null;
+        }
+    }
+
 
 }

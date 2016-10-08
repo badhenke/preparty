@@ -1,4 +1,4 @@
-<!doctype html>
+  <!doctype html>
 
 <html lang="en">
 <head>
@@ -23,12 +23,44 @@
 </body>
 
 <script>
+var id = gup('id',window.location.href);
 
-window.location.href = "https://www.facebook.com/dialog/oauth/?"
-                + "client_id=" + "992787620844475"
-                + "&redirect_uri=" + "http://localhost:8080/auth-web/code"
-                + "&display=page"
-                + "&response_type=code";
+
+if(!id){
+  redirectToFacebookLogin();
+}else{
+
+  $.ajax({
+    url: "http://localhost:8080/auth-web/",
+    type: "get",
+    data:{id:id},
+    success: function(response) {
+        window.location.href = "http://localhost:3000/";
+    },
+    error: function(xhr) {
+      redirectToFacebookLogin();
+    }
+  });
+}
+
+function redirectToFacebookLogin() {
+  window.location.href = "https://www.facebook.com/dialog/oauth/?"
+                  + "client_id=" + "992787620844475"
+                  + "&redirect_uri=" + "http://localhost:8080/auth-web/code"
+                  + "&display=page"
+                  + "&response_type=code";
+}
+
+
+function gup( name, url ) {
+    if (!url) url = location.href;
+    name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+    var regexS = "[\\?&]"+name+"=([^&#]*)";
+    var regex = new RegExp( regexS );
+    var results = regex.exec( url );
+    return results == null ? null : results[1];
+}
+
 </script>
 
 

@@ -17,22 +17,7 @@ import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMeth
 @RestController
 public class Login {
 
-    @Value(value = "FACEBOOK_APP_ID")
-    String FACEBOOK_APP_ID;
-
-    @Value(value = "FACEBOOK_APP_ID")
-    String FACEBOOK_REDIRECT_URL;
-
-    @Value(value = "FACEBOOK_EXCHANGE_KEY")
-    String FACEBOOK_EXCHANGE_KEY;
-
-    @RequestMapping(value = "/facebooklogin")
-        public String getFacebookLogin(@RequestHeader(value="authorization") String authorization ) {
-
-            return "login";
-        }
 
 
-
-    }
+}
 
