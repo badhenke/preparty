@@ -1,9 +1,8 @@
-package com.forfesten.Utility;
+package com.forfesten.Configurations;
 
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -46,7 +45,9 @@ public class FilterConfigurations {
     public FilterRegistrationBean authenticationFilter() {
         FilterRegistrationBean bean = new FilterRegistrationBean();
         bean.setFilter(new AuthenticationFilter());
-        bean.setOrder(-200);
+        bean.addUrlPatterns("/api/*");
+        bean.addUrlPatterns("/auth/*");
+        bean.setOrder(-50);
         return bean;
     }
 

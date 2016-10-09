@@ -23,7 +23,7 @@
 </body>
 
 <script>
-var id = gup('id',window.location.href);
+var id = gup('id',window.location.href)  || sessionStorage.getItem('id');
 
 
 if(!id){
@@ -31,9 +31,12 @@ if(!id){
 }else{
 
   $.ajax({
-    url: "http://localhost:8080/auth-web/",
+    url: "http://localhost:8080/auth/",
     type: "get",
-    data:{id:id},
+    beforeSend: function (request)
+            {
+                request.setRequestHeader("Authentication", id);
+            },
     success: function(response) {
         window.location.href = "http://localhost:3000/";
     },
@@ -46,7 +49,7 @@ if(!id){
 function redirectToFacebookLogin() {
   window.location.href = "https://www.facebook.com/dialog/oauth/?"
                   + "client_id=" + "992787620844475"
-                  + "&redirect_uri=" + "http://localhost:8080/auth-web/code"
+                  + "&redirect_uri=" + "http://localhost:8080/code"
                   + "&display=page"
                   + "&response_type=code";
 }

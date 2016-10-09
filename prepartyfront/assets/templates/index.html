@@ -32,18 +32,23 @@ function gup( name, url ) {
     return results == null ? null : results[1];
 }
 
-var id = gup('id',window.location.href);
+var id = gup('id',window.location.href) || sessionStorage.getItem('id');
+
 
 if(!id){
   window.location.href = 'http://localhost:3000/login'
 }else{
 
   $.ajax({
-    url: "http://localhost:8080/auth-web/",
+    url: "http://localhost:8080/auth/",
     type: "get",
-    data:{id:id},
+    beforeSend: function (request)
+            {
+                request.setRequestHeader("Authentication", id);
+            },
     success: function(response) {
       console.log("Success Auth");
+      sessionStorage.setItem('id', id);
     },
     error: function(xhr) {
       //alert("Failed Auth");

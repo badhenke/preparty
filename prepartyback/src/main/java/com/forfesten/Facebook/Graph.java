@@ -26,7 +26,7 @@ public class Graph {
 
         String url = "https://graph.facebook.com/oauth/access_token?" +
                 "client_id=" + "992787620844475" +
-                "&redirect_uri=" +"http://localhost:8080/auth-web/code"+
+                "&redirect_uri=" +"http://localhost:8080/code"+
                 "&client_secret=c13b3bacd37e2cd18532d4ba60a94ba7" +
                 "&code="+ code;
 
