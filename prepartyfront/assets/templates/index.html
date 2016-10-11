@@ -32,10 +32,10 @@ function gup( name, url ) {
     return results == null ? null : results[1];
 }
 
-var id = gup('id',window.location.href) || sessionStorage.getItem('id');
+var code = gup('code',window.location.href) || sessionStorage.getItem('code');
 
 
-if(!id){
+if(!code){
   window.location.href = 'http://localhost:3000/login'
 }else{
 
@@ -44,11 +44,11 @@ if(!id){
     type: "get",
     beforeSend: function (request)
             {
-                request.setRequestHeader("Authentication", id);
+                request.setRequestHeader("Authentication", code);
             },
     success: function(response) {
       console.log("Success Auth");
-      sessionStorage.setItem('id', id);
+      sessionStorage.setItem('code', code);
     },
     error: function(xhr) {
       //alert("Failed Auth");

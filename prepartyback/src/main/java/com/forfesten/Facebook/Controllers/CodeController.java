@@ -31,7 +31,7 @@ public class CodeController {
             // Add to token storage
             TokenStorage.AddAuthUser(id, code, accessToken);
             ModelMap model = new ModelMap();
-            model.put("id", id);
+            model.put("code", code);
             return new ModelAndView("redirect:" + FRONTEND_URL, model);
 
         } else {

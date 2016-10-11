@@ -20,28 +20,28 @@ public class TokenStorage {
 
         if(!tokenMap.containsKey(id)){
             // If not exist, add it
-            tokenMap.put(id, new AuthUser(id,code,token));
+            tokenMap.put(code, new AuthUser(id,code,token));
             return true;
 
         }else{
             // If exists in map
             if(Graph.AuthenticateToken(token) != null) {
                 // It it is a correct token, add it into map
-                tokenMap.put(id, new AuthUser(id,code,token));
+                tokenMap.put(code, new AuthUser(id,code,token));
                 return true;
             } else {
                 // If its not a valid token, return false
-                tokenMap.remove(id);
+                tokenMap.remove(code);
                 return false;
             }
         }
     }
 
-    public static boolean Exists(String id){
-        if(tokenMap.containsKey(id)){
+    public static boolean Exists(String code){
+        if(tokenMap.containsKey(code)){
 
             // If Token exists, check that it is still valid
-            AuthUser user = tokenMap.get(id);
+            AuthUser user = tokenMap.get(code);
             if(Graph.AuthenticateToken(user.getToken()) != null){
                 // Token valid, return true
                 return true;

@@ -23,10 +23,10 @@
 </body>
 
 <script>
-var id = gup('id',window.location.href)  || sessionStorage.getItem('id');
+var code = gup('code',window.location.href)  || sessionStorage.getItem('code');
 
 
-if(!id){
+if(!code){
   redirectToFacebookLogin();
 }else{
 
@@ -35,7 +35,7 @@ if(!id){
     type: "get",
     beforeSend: function (request)
             {
-                request.setRequestHeader("Authentication", id);
+                request.setRequestHeader("Authentication", code);
             },
     success: function(response) {
         window.location.href = "http://localhost:3000/";

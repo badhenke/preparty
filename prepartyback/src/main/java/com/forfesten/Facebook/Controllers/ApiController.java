@@ -20,8 +20,8 @@ public class ApiController {
     }
 
     @RequestMapping(value = "/logout")
-    public ResponseEntity facebookLogout(@RequestHeader(value = "Authentication") String id) {
-        TokenStorage.Remove(id);
+    public ResponseEntity facebookLogout(@RequestHeader(value = "Authentication") String code) {
+        TokenStorage.Remove(code);
         return new ResponseEntity(HttpStatus.OK);
     }
 }

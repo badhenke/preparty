@@ -30,7 +30,7 @@ public class AuthenticationFilter extends GenericFilterBean {
             }
         }
 
-        System.out.println("Continue");
+        System.out.println("Authenticated user - Continue");
         chain.doFilter(request, response);
     }
 }
