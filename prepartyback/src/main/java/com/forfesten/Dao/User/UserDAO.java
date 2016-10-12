@@ -1,8 +1,6 @@
 package com.forfesten.Dao.User;
 
 import com.forfesten.Models.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 
@@ -13,6 +11,10 @@ public interface UserDAO {
 
     public void save(User user);
 
+    public List<User> getAll();
 
+    public void deleteAll();
+
+    public User getUserById(int id);
 
 }

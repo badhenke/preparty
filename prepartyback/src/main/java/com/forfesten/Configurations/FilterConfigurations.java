@@ -28,20 +28,6 @@ public class FilterConfigurations {
     }
 
     @Bean
-    public FilterRegistrationBean fbAccessFilter() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:3000");
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
-        source.registerCorsConfiguration("/**", config);
-        FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
-        bean.setOrder(-100);
-        return bean;
-    }
-
-    @Bean
     public FilterRegistrationBean authenticationFilter() {
         FilterRegistrationBean bean = new FilterRegistrationBean();
         bean.setFilter(new AuthenticationFilter());

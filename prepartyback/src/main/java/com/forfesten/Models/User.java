@@ -17,6 +17,11 @@ public class User {
         this.birthdate = birthdate;
     }
 
+    public User(String name, Date birthdate) {
+        this.name = name;
+        this.birthdate = birthdate;
+    }
+
     public int getId() {
         return id;
     }
