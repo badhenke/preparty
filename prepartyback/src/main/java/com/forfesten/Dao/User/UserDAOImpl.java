@@ -1,18 +1,24 @@
 package com.forfesten.Dao.User;
 
+import com.forfesten.Facebook.Graph;
 import com.forfesten.Models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Service;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
 /**
- * Created by heer on 12/10/2016.
+ * Connections to DB that hadles users
  */
+@Service
 public class UserDAOImpl implements UserDAO {
+
+    @Autowired
+    Graph graph;
 
     private static final String SQL_INSERT = "INSERT INTO users (id, name, birthdate) values (?, ?,?) ";
     private static final String SQL_GET = "SELECT * from users ";
@@ -27,7 +33,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public User getUserById(int id) {
+    public User getUserById(String id) {
         String sqlquery = SQL_GET + "WHERE id=" + id;
         List<User> userList = jdbcTemplate.query(sqlquery, new UserRowMapper());
         if (userList.isEmpty()){
@@ -52,9 +58,29 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
+    public boolean existById(String id){
+        String sqlquery = SQL_GET + "WHERE id=" + id;
+        List<User> userList = jdbcTemplate.query(sqlquery, new UserRowMapper());
+        if (userList.isEmpty()){
+            return false;
+        }else{
+            return true;
+        }
+    }
+    
+    public void saveIfNotExist(String id, String accessToken){
+        if(!existById(id)){
+            System.out.println("\n User not exists in db, adding!");
+            // Create user
+            String name = graph.getName(accessToken);
+            User user = new User(id,name,null);
+            save(user);
+        }
+    }
+
     private class UserRowMapper implements RowMapper<User> {
         public User mapRow(ResultSet rs, int i) throws SQLException {
-            return new User(rs.getInt("id"), rs.getString("name"), rs.getDate("birthdate"));
+            return new User(rs.getString("id"), rs.getString("name"), rs.getDate("birthdate"));
         }
     }
 

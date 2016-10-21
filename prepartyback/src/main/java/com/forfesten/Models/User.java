@@ -7,11 +7,11 @@ import java.util.Date;
  */
 public class User {
 
-    private int id;
+    private String id;
     private String name;
     private Date birthdate;
 
-    public User(int id, String name, Date birthdate) {
+    public User(String id, String name, Date birthdate) {
         this.id = id;
         this.name = name;
         this.birthdate = birthdate;
@@ -22,7 +22,7 @@ public class User {
         this.birthdate = birthdate;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 

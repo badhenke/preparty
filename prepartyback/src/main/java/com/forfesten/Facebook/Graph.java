@@ -8,6 +8,7 @@ import com.forfesten.HttpHelpers.Request;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -18,11 +19,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
+@Service
 public class Graph {
 
 
 
-    public static String GetAccessToken(String code) {
+    public String getAccessToken(String code) {
 
         String url = "https://graph.facebook.com/oauth/access_token?" +
                 "client_id=" + "992787620844475" +
@@ -44,7 +46,7 @@ public class Graph {
         }
     }
 
-    public static String AuthenticateToken (String token) {
+    public String authenticateToken (String token) {
 
         String url = "https://graph.facebook.com/me?access_token=" + token;
         try {
@@ -58,7 +60,7 @@ public class Graph {
         }
     }
 
-    public static String GetProfilePictureUrl(String token){
+    public String getProfilePictureUrl(String token){
         String url = "https://graph.facebook.com/me?fields=picture&type=large&access_token="+token;
         try {
 
@@ -72,5 +74,16 @@ public class Graph {
     }
 
 
+    public String getName(String token){
+        String url = "https://graph.facebook.com/me?fields=name&type=large&access_token="+token;
+        try {
+
+            String result = Request.Get(url);
+            JSONObject obj = new JSONObject(result);
+            return obj.getString("name");
+        }catch (Exception e){
+            return null;
+        }
+    }
 
 }

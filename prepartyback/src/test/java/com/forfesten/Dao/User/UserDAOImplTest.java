@@ -44,7 +44,7 @@ public class UserDAOImplTest {
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String dateInString = "2016-10-12";
-        userDAO.save(new User(1234,"Test Testson", sdf.parse(dateInString)));
+        userDAO.save(new User("1234","Test Testson", sdf.parse(dateInString)));
     }
 
     @Test

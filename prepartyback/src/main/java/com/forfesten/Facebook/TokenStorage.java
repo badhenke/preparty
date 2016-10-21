@@ -1,6 +1,7 @@
 package com.forfesten.Facebook;
 
 import com.forfesten.Facebook.Models.AuthUser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Repository;
 
@@ -14,6 +15,8 @@ import java.util.Map;
 
 public class TokenStorage {
 
+    private static Graph graph = new Graph();
+
     private static Map<String, AuthUser> tokenMap = new HashMap<>();
 
     public static boolean AddAuthUser(String id, String code, String token){
@@ -25,7 +28,7 @@ public class TokenStorage {
 
         }else{
             // If exists in map
-            if(Graph.AuthenticateToken(token) != null) {
+            if(graph.authenticateToken(token) != null) {
                 // It it is a correct token, add it into map
                 tokenMap.put(code, new AuthUser(id,code,token));
                 return true;
@@ -42,7 +45,7 @@ public class TokenStorage {
 
             // If Token exists, check that it is still valid
             AuthUser user = tokenMap.get(code);
-            if(Graph.AuthenticateToken(user.getToken()) != null){
+            if(graph.authenticateToken(user.getToken()) != null){
                 // Token valid, return true
                 return true;
             }else{

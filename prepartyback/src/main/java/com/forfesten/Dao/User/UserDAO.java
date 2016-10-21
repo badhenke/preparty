@@ -15,6 +15,10 @@ public interface UserDAO {
 
     public void deleteAll();
 
-    public User getUserById(int id);
+    public User getUserById(String id);
+
+    public boolean existById(String id);
+
+    public void saveIfNotExist(String id, String accessToken);
 
 }
