@@ -9,10 +9,15 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * Created by henrik on 2016-10-02.
+ * Class that holds all HTTP Requests.
  */
 public class Request {
 
+    /**
+     * Makes a GET request to url.
+     * @param url where to make request
+     * @return the result
+     */
     public static String Get(String url) throws IOException {
 
         URL obj = new URL(url);

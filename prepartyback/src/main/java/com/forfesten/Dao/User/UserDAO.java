@@ -5,20 +5,40 @@ import com.forfesten.Models.User;
 import java.util.List;
 
 /**
- * Created by heer on 12/10/2016.
+ * Abstract for UserDAOImpl.
  */
 public interface UserDAO {
 
-    public void save(User user);
+    /**
+     * Saves a user to the database.
+     * @param user to save
+     */
+    void save(User user);
 
-    public List<User> getAll();
+    /**
+     * Gets all users from database.
+     * @return List of Users
+     */
+    List<User> getAll();
 
-    public void deleteAll();
+    /**
+     * Deletes all users from database.
+     */
+    void deleteAll();
 
-    public User getUserById(String id);
+    /**
+     * Gets a user from database, returns null if not exists.
+     * @param id of user
+     * @return User object
+     */
+    User getUserById(String id);
 
-    public boolean existById(String id);
+    /**
+     * Checks if a user exists in database.
+     * @param id of User
+     * @return true if exists, false otherwise
+     */
+    boolean existById(String id);
 
-    public void saveIfNotExist(String id, String accessToken);
 
 }

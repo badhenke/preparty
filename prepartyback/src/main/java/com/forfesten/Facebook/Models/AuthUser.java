@@ -1,7 +1,7 @@
 package com.forfesten.Facebook.Models;
 
 /**
- * Created by henrik on 2016-10-05.
+ * Special User Object that is used in TokenStorage.
  */
 public class AuthUser {
     private String id;

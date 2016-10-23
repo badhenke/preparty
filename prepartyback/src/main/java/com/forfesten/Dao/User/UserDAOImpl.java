@@ -12,13 +12,10 @@ import java.sql.SQLException;
 import java.util.List;
 
 /**
- * Connections to DB that hadles users
+ * Implementation for database actions.
  */
 @Service
 public class UserDAOImpl implements UserDAO {
-
-    @Autowired
-    Graph graph;
 
     private static final String SQL_INSERT = "INSERT INTO users (id, name, birthdate) values (?, ?,?) ";
     private static final String SQL_GET = "SELECT * from users ";
@@ -65,16 +62,6 @@ public class UserDAOImpl implements UserDAO {
             return false;
         }else{
             return true;
-        }
-    }
-    
-    public void saveIfNotExist(String id, String accessToken){
-        if(!existById(id)){
-            System.out.println("\n User not exists in db, adding!");
-            // Create user
-            String name = graph.getName(accessToken);
-            User user = new User(id,name,null);
-            save(user);
         }
     }
 

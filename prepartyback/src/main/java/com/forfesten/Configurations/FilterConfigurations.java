@@ -13,12 +13,15 @@ import org.springframework.web.filter.CorsFilter;
 @Configuration
 public class FilterConfigurations {
 
+    /**
+     * Adding a CORS filter to the chain.
+     */
     @Bean
     public FilterRegistrationBean corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:3000");
+        config.addAllowedOrigin("*");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/**", config);
@@ -27,6 +30,9 @@ public class FilterConfigurations {
         return bean;
     }
 
+    /**
+     * Setup for authentication filter bean.
+     */
     @Bean
     public FilterRegistrationBean authenticationFilter() {
         FilterRegistrationBean bean = new FilterRegistrationBean();

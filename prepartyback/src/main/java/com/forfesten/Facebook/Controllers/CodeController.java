@@ -1,20 +1,16 @@
 package com.forfesten.Facebook.Controllers;
 
-import com.forfesten.Dao.User.UserDAOImpl;
+import com.forfesten.DaoWrappers.UserDAOWrapper;
 import com.forfesten.Facebook.Graph;
 import com.forfesten.Facebook.TokenStorage;
-import com.forfesten.Models.User;
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
- * Created by henrik on 2016-10-02.
+ * Open endpoints for receiving facebook code.
  */
 @RestController
 public class CodeController {
@@ -23,11 +19,18 @@ public class CodeController {
     private String FRONTEND_URL;
 
     @Autowired
-    UserDAOImpl userDAO;
+    UserDAOWrapper userDAOWrapper;
 
     @Autowired
     Graph graph;
 
+    /**
+     * Here is an endpoint for facebook redirect to deliver the code.
+     * The code will then be traded for a accessToken from facebook.
+     * Here we also saves the user in db if not exists.
+     * @param code from facebook
+     * @return redirect and adds code in params
+     */
     @RequestMapping(value = "/code")
     public ModelAndView codeController(@RequestParam(value = "code", defaultValue = "") String code) {
 
@@ -36,10 +39,11 @@ public class CodeController {
 
         if (accessToken != null && id != null) {
 
-            System.out.println("Store AccessToken:" + accessToken);
+            System.out.println("\nStore AccessToken:" + accessToken);
+            System.out.println("For code:" + code + "\n");
 
             // Add to DB if not exist
-            userDAO.saveIfNotExist(id, accessToken);
+            userDAOWrapper.saveIfNotExist(id, accessToken);
 
             // Add to token storage
             TokenStorage.AddAuthUser(id, code, accessToken);

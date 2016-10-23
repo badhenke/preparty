@@ -8,17 +8,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Created by heer on 08/10/2016.
+ * Controllers regarding checking authentication and logout
  */
 @RestController
 @RequestMapping(value = "/auth")
 public class ApiController {
 
+    /**
+     * This is a simple method to check if you are authenticated.
+     * Since this is protected by Authentication filter.
+     * @return HTTPStatus OK, 200
+     */
     @RequestMapping(value = "/")
     public ResponseEntity facebookCheckController() {
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    /**
+     * Logs out from this system by deleting AuthUser in TokenStorage.
+     * @param code to delete
+     * @return HTTPStatus OK, 200
+     */
     @RequestMapping(value = "/logout")
     public ResponseEntity facebookLogout(@RequestHeader(value = "Authentication") String code) {
         TokenStorage.Remove(code);

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by henrik on 2016-10-05.
+ * A Place to storetokens
  */
 
 public class TokenStorage {
@@ -19,9 +19,16 @@ public class TokenStorage {
 
     private static Map<String, AuthUser> tokenMap = new HashMap<>();
 
+    /**
+     * Adds a new user in TokenStorage
+     * @param id of user
+     * @param code of user
+     * @param token accesstoken of user
+     * @return a status
+     */
     public static boolean AddAuthUser(String id, String code, String token){
 
-        if(!tokenMap.containsKey(id)){
+        if(!tokenMap.containsKey(code)){
             // If not exist, add it
             tokenMap.put(code, new AuthUser(id,code,token));
             return true;
@@ -40,6 +47,11 @@ public class TokenStorage {
         }
     }
 
+    /**
+     * Check if it exists in TokenStorage and if it is valid by facebook.
+     * @param code from user
+     * @return a status
+     */
     public static boolean Exists(String code){
         if(tokenMap.containsKey(code)){
 
@@ -58,12 +70,25 @@ public class TokenStorage {
         }
     }
 
-    public static void Remove(String id){
-        if(tokenMap.containsKey(id))
-            tokenMap.remove(id);
+    /**
+     * Deletes a AuthUser from TokenStorage by code.
+     * @param code
+     */
+    public static void Remove(String code){
+        if(tokenMap.containsKey(code))
+            tokenMap.remove(code);
     }
 
-    public static Map<String, AuthUser> getTokenMap() {
-        return tokenMap;
+    /**
+     * Get ID by code.
+     * @param code to check
+     * @return ID, null if not exists
+     */
+    public static String getIdByCode(String code){
+        if(tokenMap.containsKey(code))
+            return tokenMap.get(code).getId();
+        else
+            return null;
     }
+
 }

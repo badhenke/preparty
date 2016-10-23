@@ -1,7 +1,7 @@
 package com.forfesten.Facebook;
 
 /**
- * Created by henrik on 2016-10-02.
+ * HTTP requests for connecting to Facebook Graph API.
  */
 
 import com.forfesten.HttpHelpers.Request;
@@ -23,7 +23,11 @@ import java.util.Map;
 public class Graph {
 
 
-
+    /**
+     * Trades a code to accessToken.
+     * @param code to send
+     * @return accessToken from facebook
+     */
     public String getAccessToken(String code) {
 
         String url = "https://graph.facebook.com/oauth/access_token?" +
@@ -33,19 +37,22 @@ public class Graph {
                 "&code="+ code;
 
         try {
-
             String result = Request.Get(url);
             String accessToken = result.substring(13);
             return accessToken;
 
         } catch (Exception e) {
-            String errormsg = "Graph.Authenticate Error:" + e.getMessage();
+            String errormsg = "Graph.Authenticate ErrorJson:" + e.getMessage();
             System.out.println(errormsg);
-
             return null;
         }
     }
 
+    /**
+     * Checks if Access token is valid.
+     * @param token to check
+     * @return id of user or Null if invalid
+     */
     public String authenticateToken (String token) {
 
         String url = "https://graph.facebook.com/me?access_token=" + token;
@@ -60,6 +67,11 @@ public class Graph {
         }
     }
 
+    /**
+     * Gets the profile picture.
+     * @param token accesstoken
+     * @return url to picture
+     */
     public String getProfilePictureUrl(String token){
         String url = "https://graph.facebook.com/me?fields=picture&type=large&access_token="+token;
         try {
@@ -73,7 +85,11 @@ public class Graph {
         }
     }
 
-
+    /**
+     * Gets name of user.
+     * @param token accessToken
+     * @return name
+     */
     public String getName(String token){
         String url = "https://graph.facebook.com/me?fields=name&type=large&access_token="+token;
         try {
@@ -81,6 +97,17 @@ public class Graph {
             String result = Request.Get(url);
             JSONObject obj = new JSONObject(result);
             return obj.getString("name");
+        }catch (Exception e){
+            return null;
+        }
+    }
+
+    public String getEmail(String token){
+        String url = "https://graph.facebook.com/me?fields=email&type=large&access_token="+token;
+        try {
+            String result = Request.Get(url);
+            JSONObject obj = new JSONObject(result);
+            return obj.getString("email");
         }catch (Exception e){
             return null;
         }

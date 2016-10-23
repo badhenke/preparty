@@ -3,7 +3,7 @@ package com.forfesten.Models;
 import java.util.Date;
 
 /**
- * Created by heer on 12/10/2016.
+ * Database model for User.
  */
 public class User {
 
