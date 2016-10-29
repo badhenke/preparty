@@ -53,7 +53,7 @@ public class GroupController {
         boolean addGroupStatus = groupDAOWrapper.saveNewGroup(userId, description);
 
         if (!addGroupStatus) {
-            return new ResponseEntity(new ErrorJson("User already in a group.", "Bad Request", HttpStatus.CONFLICT, "POST /api/group"), HttpStatus.CONFLICT);
+            return new ResponseEntity(new ErrorJson("User already in a group.", "Conflict", HttpStatus.CONFLICT, "POST /api/group"), HttpStatus.CONFLICT);
         } else {
             return new ResponseEntity(HttpStatus.CREATED);
         }
