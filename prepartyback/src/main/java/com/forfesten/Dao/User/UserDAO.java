@@ -40,5 +40,17 @@ public interface UserDAO {
      */
     boolean existById(String id);
 
+    /**
+     * Updates groupId for user
+     * @param id of User
+     * @param groupId of group
+     */
+    void setGroupId(String id, int groupId);
 
+    /**
+     * Checks if user is in a group or not.
+     * @param id of user
+     * @return status
+     */
+    boolean isInAGroup(String id);
 }

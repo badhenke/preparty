@@ -1,9 +1,13 @@
 package com.forfesten.Controllers;
 
+import com.forfesten.DaoWrappers.GroupDAOWrapper;
+import com.forfesten.Facebook.TokenStorage;
+import com.forfesten.Models.ErrorJson;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by heer on 08/10/2016.
@@ -12,18 +16,42 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/api/group")
 public class GroupController {
 
+    @Autowired
+    GroupDAOWrapper groupDAOWrapper;
+
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity getGroup(){
+    public ResponseEntity getGroup() {
         return null;
     }
 
+
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity addGroup(){
-        return null;
+    public ResponseEntity addGroup(@RequestHeader(value = "Authentication") String code,
+                                   @RequestBody String requestRaw) {
+
+        JSONObject requestJson = new JSONObject(requestRaw);
+        String userId = TokenStorage.getIdByCode(code);
+
+        String description = null;
+
+        if (!requestJson.has("description")) {
+            return new ResponseEntity(new ErrorJson("No data entered.", "Bad Request", HttpStatus.BAD_REQUEST, "POST /api/group"), HttpStatus.BAD_REQUEST);
+        }
+
+        description = requestJson.getString("description");
+
+        boolean addGroupStatus = groupDAOWrapper.saveNewGroup(userId, description);
+
+        if (!addGroupStatus) {
+            return new ResponseEntity(new ErrorJson("User already in a group.", "Bad Request", HttpStatus.CONFLICT, "POST /api/group"), HttpStatus.CONFLICT);
+        } else {
+            return new ResponseEntity(HttpStatus.OK);
+        }
+
     }
 
     @RequestMapping(method = RequestMethod.DELETE)
-    public ResponseEntity deleteGroup(){
+    public ResponseEntity deleteGroup() {
         return null;
     }
 
