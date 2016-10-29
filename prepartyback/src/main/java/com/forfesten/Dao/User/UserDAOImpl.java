@@ -84,6 +84,12 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
+    @Override
+    public List<User> getAllByGroupId(int id) {
+        String sqlquery = SQL_GET + " WHERE group_id=" + id;
+        return jdbcTemplate.query(sqlquery, new UserRowMapper());
+    }
+
     private class UserRowMapper implements RowMapper<User> {
         public User mapRow(ResultSet rs, int i) throws SQLException {
             return new User(rs.getString("id"), rs.getString("name"), rs.getDate("birthdate"), rs.getInt("group_id"));

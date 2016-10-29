@@ -22,7 +22,7 @@ import java.util.List;
 @Service
 public class GroupDAOImpl implements GroupDAO {
 
-    private static final String SQL_INSERT = "INSERT INTO groups (description) values ('%s') ";
+    private static final String SQL_INSERT = "INSERT INTO groups (description, mood_id) values ('%s', %s) ";
     private static final String SQL_GET = "SELECT * FROM groups";
 
     @Autowired
@@ -31,7 +31,7 @@ public class GroupDAOImpl implements GroupDAO {
     @Override
     public int save(Group group) {
 
-        String sql = String.format(SQL_INSERT, group.getDescription());
+        String sql = String.format(SQL_INSERT, group.getDescription(), group.getMoodId());
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(
@@ -57,7 +57,7 @@ public class GroupDAOImpl implements GroupDAO {
 
     private class GroupRowMapper implements RowMapper<Group> {
         public Group mapRow(ResultSet rs, int i) throws SQLException {
-            return new Group(rs.getInt("id"), rs.getString("description"));
+            return new Group(rs.getInt("id"), rs.getString("description"), rs.getInt("mood_id"));
         }
     }
 

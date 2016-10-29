@@ -27,12 +27,12 @@ public class GroupDAOWrapper {
      * @param description of the group
      * @return status of the input.
      */
-    public boolean saveNewGroup(String id, String description) {
+    public boolean saveNewGroup(String id, String description, int moodId) {
 
         if (userDAO.getGroupId(id) > 0) {
             return false;
         } else {
-            Group group = new Group(description);
+            Group group = new Group(description, moodId);
             int groupId = groupDAO.save(group);
             userDAO.setGroupId(id, groupId);
             return true;
