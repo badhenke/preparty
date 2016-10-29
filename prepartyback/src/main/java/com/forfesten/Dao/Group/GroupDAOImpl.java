@@ -13,21 +13,23 @@ import org.springframework.stereotype.Service;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 
 /**
  * Implementation for database actions.
  */
 @Service
-public class GroupDAOImpl implements GroupDAO{
+public class GroupDAOImpl implements GroupDAO {
 
     private static final String SQL_INSERT = "INSERT INTO groups (description) values ('%s') ";
+    private static final String SQL_GET = "SELECT * FROM groups";
 
     @Autowired
     JdbcTemplate jdbcTemplate;
 
     @Override
-    public int save(Group group){
+    public int save(Group group) {
 
         String sql = String.format(SQL_INSERT, group.getDescription());
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -35,14 +37,25 @@ public class GroupDAOImpl implements GroupDAO{
         jdbcTemplate.update(
                 new PreparedStatementCreator() {
                     public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-                        return (PreparedStatement) connection.prepareStatement(sql, new String[] {"id"});
+                        return (PreparedStatement) connection.prepareStatement(sql, new String[]{"id"});
                     }
                 }, keyHolder);
 
         return keyHolder.getKey().intValue();
     }
 
-    private class UserRowMapper implements RowMapper<Group> {
+    @Override
+    public Group getById(int id) {
+        String sql = SQL_GET + " WHERE id=" + id;
+        List<Group> groupList = jdbcTemplate.query(sql, new GroupRowMapper());
+        if (groupList.isEmpty()) {
+            return null;
+        } else {
+            return groupList.get(0);
+        }
+    }
+
+    private class GroupRowMapper implements RowMapper<Group> {
         public Group mapRow(ResultSet rs, int i) throws SQLException {
             return new Group(rs.getInt("id"), rs.getString("description"));
         }

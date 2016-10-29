@@ -59,7 +59,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public boolean existById(String id) {
-        String sql = SQL_GET + "WHERE id=" + id;
+        String sql = SQL_GET + " WHERE id=" + id;
         List<User> userList = jdbcTemplate.query(sql, new UserRowMapper());
         if (userList.isEmpty()) {
             return false;
@@ -74,13 +74,13 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public boolean isInAGroup(String id) {
+    public int getGroupId(String id) {
         String sql = SQL_GET_GROUPID + " WHERE id=" + id;
         List<Integer> iList = jdbcTemplate.query(sql, new GroupIdRowMapper());
-        if (iList.get(0) == 0) {
-            return false;
+        if (iList.get(0) <= 0) {
+            return -1;
         } else {
-            return true;
+            return iList.get(0);
         }
     }
 

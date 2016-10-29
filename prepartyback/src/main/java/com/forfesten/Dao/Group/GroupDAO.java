@@ -13,4 +13,11 @@ interface GroupDAO {
      * @return id of new group
      */
     int save(Group group);
+
+    /**
+     * Get a specific Group
+     * @param id of group
+     * @return Group
+     */
+    Group getById(int id);
 }

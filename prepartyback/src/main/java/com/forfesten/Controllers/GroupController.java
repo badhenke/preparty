@@ -3,6 +3,7 @@ package com.forfesten.Controllers;
 import com.forfesten.DaoWrappers.GroupDAOWrapper;
 import com.forfesten.Facebook.TokenStorage;
 import com.forfesten.Models.ErrorJson;
+import com.forfesten.Models.Group;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,8 +21,17 @@ public class GroupController {
     GroupDAOWrapper groupDAOWrapper;
 
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity getGroup() {
-        return null;
+    public ResponseEntity getGroup(@RequestHeader(value = "Authentication") String code) {
+
+        String userId = TokenStorage.getIdByCode(code);
+        Group group = groupDAOWrapper.getGroup(userId);
+
+        if (group == null) {
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity(group, HttpStatus.OK);
+        }
+
     }
 
 
@@ -45,7 +55,7 @@ public class GroupController {
         if (!addGroupStatus) {
             return new ResponseEntity(new ErrorJson("User already in a group.", "Bad Request", HttpStatus.CONFLICT, "POST /api/group"), HttpStatus.CONFLICT);
         } else {
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity(HttpStatus.CREATED);
         }
 
     }

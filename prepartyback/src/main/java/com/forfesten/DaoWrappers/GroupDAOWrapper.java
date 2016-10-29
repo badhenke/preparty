@@ -22,21 +22,31 @@ public class GroupDAOWrapper {
     /**
      * Saves new Group to DB and adds group id to the user that created the group.
      * Returns true if it was added successfully. Can fail when user is already in group.
-     * @param id of user that created Group
+     *
+     * @param id          of user that created Group
      * @param description of the group
      * @return status of the input.
      */
-    public boolean saveNewGroup(String id, String description){
+    public boolean saveNewGroup(String id, String description) {
 
-        if(userDAO.isInAGroup(id)){
+        if (userDAO.getGroupId(id) > 0) {
             return false;
-        }else{
+        } else {
             Group group = new Group(description);
             int groupId = groupDAO.save(group);
             userDAO.setGroupId(id, groupId);
             return true;
         }
 
+    }
+
+    public Group getGroup(String id) {
+        int groupId = userDAO.getGroupId(id);
+        if (groupId <= 0) {
+            return null;
+        } else {
+            return groupDAO.getById(groupId);
+        }
     }
 
 }

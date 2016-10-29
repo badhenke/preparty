@@ -48,9 +48,9 @@ public interface UserDAO {
     void setGroupId(String id, int groupId);
 
     /**
-     * Checks if user is in a group or not.
+     * Get groupId of user. -1 if not in a group.
      * @param id of user
-     * @return status
+     * @return groupId
      */
-    boolean isInAGroup(String id);
+    int getGroupId(String id);
 }
