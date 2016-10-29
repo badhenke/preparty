@@ -49,7 +49,7 @@ public class UserDAOWrapper {
 
             // Create userInfo
             String email = graph.getEmail(accessToken);
-            UserInfo userInfo = new UserInfo(id,email, null, null);
+            UserInfo userInfo = new UserInfo(id, email, null, null, null);
             userInfoDAO.save(userInfo);
 
         }
@@ -64,7 +64,8 @@ public class UserDAOWrapper {
         UserInfo dbUserInfo = userInfoDAO.getById(userInfo.getUser_id());
         if (userInfo.getEmail() == dbUserInfo.getEmail()
                 && userInfo.getGps_latitude() == dbUserInfo.getGps_latitude()
-                && userInfo.getGps_longitude() == dbUserInfo.getGps_longitude())
+                && userInfo.getGps_longitude() == dbUserInfo.getGps_longitude()
+                && userInfo.getDescription() == dbUserInfo.getDescription())
             return;
 
         userInfoDAO.updateAll(userInfo);
@@ -97,4 +98,14 @@ public class UserDAOWrapper {
     public void updateUserInfoEmail(String userId, String email) {
         userInfoDAO.updateEmail(userId, email);
     }
+
+    /**
+     * Updates Description data in UserInfo.
+     * @param userId ID of user
+     * @param description new desc
+     */
+    public void updateUserInfoDescription(String userId, String description){
+        userInfoDAO.updateDescription(userId, description);
+    }
+
 }

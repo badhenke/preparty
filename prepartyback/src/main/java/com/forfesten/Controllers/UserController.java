@@ -7,7 +7,6 @@ import com.forfesten.Models.User;
 import com.forfesten.Models.UserInfo;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -64,8 +63,8 @@ public class UserController {
         JSONObject requestJson = new JSONObject(requestRaw);
         String userId = TokenStorage.getIdByCode(code);
 
-        boolean gpsLatitudeChanged=false, gpsLongitudeChanged=false, emailChanged=false;
-        String requestEmail=null;
+        boolean gpsLatitudeChanged=false, gpsLongitudeChanged=false, emailChanged=false, descriptionChanged=false;
+        String requestEmail=null, requestDescription=null;
         Double requestGpsLatitude=null, requestGpsLongitude=null;
 
         if (requestJson.has("email")){
@@ -80,18 +79,28 @@ public class UserController {
             requestGpsLongitude = requestJson.getDouble("gps_longitude");
             gpsLongitudeChanged = true;
         }
-
-        if(!emailChanged && !gpsLatitudeChanged && !gpsLongitudeChanged){
+        if (requestJson.has("description")){
+            requestDescription = requestJson.getString("description");
+            descriptionChanged = true;
+        }
+        if(!emailChanged && !gpsLatitudeChanged && !gpsLongitudeChanged && !descriptionChanged){
             return new ResponseEntity(new ErrorJson("No data entered.", "Bad Request", HttpStatus.BAD_REQUEST, "POST /api/user"), HttpStatus.BAD_REQUEST);
         }
 
-        if(emailChanged && gpsLatitudeChanged && gpsLongitudeChanged){
-            UserInfo userInfo = new UserInfo(userId, requestEmail, requestGpsLatitude, requestGpsLongitude);
+        if(emailChanged && gpsLatitudeChanged && gpsLongitudeChanged && descriptionChanged){
+            UserInfo userInfo = new UserInfo(userId, requestEmail, requestGpsLatitude, requestGpsLongitude, requestDescription);
             userDAOWrapper.updateUserInfoAll(userInfo);
-        }else if(!emailChanged && gpsLatitudeChanged && gpsLongitudeChanged){
+            return new ResponseEntity(HttpStatus.OK);
+        }
+
+        if(gpsLatitudeChanged && gpsLongitudeChanged){
             userDAOWrapper.updateUserInfoGps(userId, requestGpsLatitude, requestGpsLongitude);
-        }else if(emailChanged && !gpsLatitudeChanged && !gpsLongitudeChanged){
+        }
+        if(emailChanged){
             userDAOWrapper.updateUserInfoEmail(userId, requestEmail);
+        }
+        if(descriptionChanged){
+            userDAOWrapper.updateUserInfoDescription(userId, requestDescription);
         }
 
         return new ResponseEntity(HttpStatus.OK);

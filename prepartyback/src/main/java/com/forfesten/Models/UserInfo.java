@@ -13,21 +13,28 @@ public class UserInfo {
     private Double gps_latitude;
     private Double gps_longitude;
     private Date created;
+    private String description;
 
-    public UserInfo(String user_id, String email, Double gps_latitude, Double gps_longitude) {
+    public UserInfo(String user_id, String email, Double gps_latitude, Double gps_longitude, String description) {
         this.user_id = user_id;
         this.email = email;
         this.gps_latitude = gps_latitude;
         this.gps_longitude = gps_longitude;
+        this.description = description;
     }
 
-    public UserInfo(int id, String user_id, String email, Double gps_latitude, Double gps_longitude, Date created) {
+    public UserInfo(int id, String user_id, String email, Double gps_latitude, Double gps_longitude, Date created, String description) {
         this.id = id;
         this.user_id = user_id;
         this.email = email;
         this.gps_latitude = gps_latitude;
         this.gps_longitude = gps_longitude;
         this.created = created;
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public Double getGps_latitude() {

@@ -43,4 +43,6 @@ public interface UserInfoDAO {
      * @param email new email
      */
     void updateEmail(String userId, String email);
+
+    void updateDescription(String userId, String description);
 }
