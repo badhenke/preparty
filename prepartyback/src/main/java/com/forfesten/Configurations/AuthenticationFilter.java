@@ -25,16 +25,16 @@ public class AuthenticationFilter extends GenericFilterBean {
 
         String auth = ((HttpServletRequest) request).getHeader("Authentication");
         if (auth == null) {
-            //((HttpServletResponse) response).setStatus(401);
+            ((HttpServletResponse) response).setStatus(401);
 
-            ((HttpServletResponse) response).sendRedirect(redirect);
+            //((HttpServletResponse) response).sendRedirect(redirect);
             System.out.println("Authentication = null");
             return;
         } else {
             if (!TokenStorage.Exists(auth)) {
 
-                ((HttpServletResponse) response).sendRedirect(redirect);
-
+                ((HttpServletResponse) response).setStatus(401);
+                //((HttpServletResponse) response).sendRedirect(redirect);
                 System.out.println("Authentication does not exist in tokenstorage");
                 return;
             }

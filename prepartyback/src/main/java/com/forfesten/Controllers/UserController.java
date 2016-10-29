@@ -32,6 +32,10 @@ public class UserController {
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity getUser(@RequestParam(value = "id") String userId){
 
+        if(userId.trim().length()<=0){
+            return new ResponseEntity(new ErrorJson("Unknown userId.", "Bad Request", HttpStatus.BAD_REQUEST, "GET /api/user"), HttpStatus.BAD_REQUEST);
+        }
+
         User user = userDAOWrapper.getUserById(userId);
         UserInfo userInfo = userDAOWrapper.getUserInfoById(userId);
         Map<String,Object> response = new HashMap<>();
@@ -45,6 +49,7 @@ public class UserController {
         response.put("email", userInfo.getEmail());
         response.put("gps_latitude", userInfo.getGps_latitude());
         response.put("gps_longitude", userInfo.getGps_longitude());
+        response.put("group_id", user.getGroupId());
         response.put("created", userInfo.getCreated());
 
         return new ResponseEntity(response, HttpStatus.OK);

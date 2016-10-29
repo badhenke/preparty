@@ -35,9 +35,9 @@ public class UserDAOImpl implements UserDAO {
     public User getUserById(String id) {
         String sqlquery = SQL_GET + "WHERE id=" + id;
         List<User> userList = jdbcTemplate.query(sqlquery, new UserRowMapper());
-        if (userList.isEmpty()){
+        if (userList.isEmpty()) {
             return null;
-        }else{
+        } else {
             return userList.get(0);
         }
     }
@@ -50,44 +50,43 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public List<User> getAll() {
         List<User> userList = jdbcTemplate.query(SQL_GET, new UserRowMapper());
-        if (userList.isEmpty()){
+        if (userList.isEmpty()) {
             return null;
-        }else{
+        } else {
             return userList;
         }
     }
 
     @Override
-    public boolean existById(String id){
-        String sqlquery = SQL_GET + "WHERE id=" + id;
-        List<User> userList = jdbcTemplate.query(sqlquery, new UserRowMapper());
-        if (userList.isEmpty()){
+    public boolean existById(String id) {
+        String sql = SQL_GET + "WHERE id=" + id;
+        List<User> userList = jdbcTemplate.query(sql, new UserRowMapper());
+        if (userList.isEmpty()) {
             return false;
-        }else{
+        } else {
             return true;
         }
     }
 
     @Override
-    public void setGroupId(String id, int groupId){
+    public void setGroupId(String id, int groupId) {
         jdbcTemplate.update(SQL_UPDATE_GROUPID, groupId, id);
     }
 
     @Override
-    public boolean isInAGroup(String id){
+    public boolean isInAGroup(String id) {
         String sql = SQL_GET_GROUPID + " WHERE id=" + id;
         List<Integer> iList = jdbcTemplate.query(sql, new GroupIdRowMapper());
-        if (iList.get(0) == 0){
+        if (iList.get(0) == 0) {
             return false;
-        }else{
+        } else {
             return true;
         }
     }
 
-
     private class UserRowMapper implements RowMapper<User> {
         public User mapRow(ResultSet rs, int i) throws SQLException {
-            return new User(rs.getString("id"), rs.getString("name"), rs.getDate("birthdate"));
+            return new User(rs.getString("id"), rs.getString("name"), rs.getDate("birthdate"), rs.getInt("group_id"));
         }
     }
 

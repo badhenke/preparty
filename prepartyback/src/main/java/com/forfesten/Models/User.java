@@ -12,15 +12,24 @@ public class User {
     private Date birthdate;
     private int groupId;
 
+    public User(String id, String name, Date birthdate, int groupId) {
+        this.id = id;
+        this.name = name;
+        this.birthdate = birthdate;
+        this.groupId = groupId;
+    }
+
+    public User(String name, Date birthdate, int groupId) {
+        this.name = name;
+        this.birthdate = birthdate;
+        this.groupId = groupId;
+    }
+
     public User(String id, String name, Date birthdate) {
         this.id = id;
         this.name = name;
         this.birthdate = birthdate;
-    }
-
-    public User(String name, Date birthdate) {
-        this.name = name;
-        this.birthdate = birthdate;
+        this.groupId = groupId;
     }
 
     public int getGroupId() {
