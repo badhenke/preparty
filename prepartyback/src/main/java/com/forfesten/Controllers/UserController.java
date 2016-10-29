@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by heer on 09/10/2016.
+ *  Controller handling user actions
  */
 @RestController
 @RequestMapping(value = "/api/user")
