@@ -22,6 +22,7 @@ public class UserDAOImpl implements UserDAO {
     private static final String SQL_DELETE_ALL = "DELETE from users ";
     private static final String SQL_UPDATE_GROUPID = "UPDATE users SET group_id=? where id=?";
     private static final String SQL_GET_GROUPID = "SELECT group_id FROM users ";
+    private static final String SQL_UPDATE_GROUPID_NULL = "UPDATE users SET group_id=NULL where id=? ";
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -82,6 +83,11 @@ public class UserDAOImpl implements UserDAO {
         } else {
             return iList.get(0);
         }
+    }
+
+    @Override
+    public void setGroupNull(String id) {
+        jdbcTemplate.update(SQL_UPDATE_GROUPID_NULL, id);
     }
 
     @Override

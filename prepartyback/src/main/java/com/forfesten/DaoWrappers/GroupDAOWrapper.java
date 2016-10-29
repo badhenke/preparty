@@ -3,8 +3,11 @@ package com.forfesten.DaoWrappers;
 import com.forfesten.Dao.Group.GroupDAOImpl;
 import com.forfesten.Dao.User.UserDAOImpl;
 import com.forfesten.Models.Group;
+import com.forfesten.Models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Wrapper that should be used when doing actions to database.
@@ -37,9 +40,14 @@ public class GroupDAOWrapper {
             userDAO.setGroupId(id, groupId);
             return true;
         }
-
     }
 
+    /**
+     * Get group that user has joined. Null if not in a group.
+     *
+     * @param id of user
+     * @return Group
+     */
     public Group getGroup(String id) {
         int groupId = userDAO.getGroupId(id);
         if (groupId <= 0) {
@@ -49,4 +57,27 @@ public class GroupDAOWrapper {
         }
     }
 
+    /**
+     * Update all parameters in group
+     *
+     * @param group to change
+     */
+    public void updateGroupAll(Group group) {
+        groupDAO.updateAll(group);
+    }
+
+    /**
+     * Drop user from Group, if it is last person then remove group.
+     *
+     * @param userId of user
+     * @param group  object of Group
+     */
+    public void dropGroup(String userId, Group group) {
+        userDAO.setGroupNull(userId);
+
+        List<User> userList = userDAO.getAllByGroupId(group.getId());
+        if (userList.isEmpty()) {
+            groupDAO.deleteGroup(group.getId());
+        }
+    }
 }

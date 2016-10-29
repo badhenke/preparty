@@ -20,6 +20,14 @@ public class Group {
         this.moodId = moodId;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setMoodId(int moodId) {
+        this.moodId = moodId;
+    }
+
     public int getMoodId() {
         return moodId;
     }

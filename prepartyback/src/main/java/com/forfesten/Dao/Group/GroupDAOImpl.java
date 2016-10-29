@@ -24,6 +24,8 @@ public class GroupDAOImpl implements GroupDAO {
 
     private static final String SQL_INSERT = "INSERT INTO groups (description, mood_id) values ('%s', %s) ";
     private static final String SQL_GET = "SELECT * FROM groups";
+    private static final String SQL_UPDATE = "UPDATE groups SET description=?, mood_id=? where id=?";
+    private static final String SQL_DELETE = "DELETE FROM groups WHERE id=?";
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -45,6 +47,11 @@ public class GroupDAOImpl implements GroupDAO {
     }
 
     @Override
+    public void deleteGroup(int id){
+        jdbcTemplate.update(SQL_DELETE, id);
+    }
+
+    @Override
     public Group getById(int id) {
         String sql = SQL_GET + " WHERE id=" + id;
         List<Group> groupList = jdbcTemplate.query(sql, new GroupRowMapper());
@@ -53,6 +60,11 @@ public class GroupDAOImpl implements GroupDAO {
         } else {
             return groupList.get(0);
         }
+    }
+
+    @Override
+    public void updateAll(Group group){
+        jdbcTemplate.update(SQL_UPDATE, group.getDescription(), group.getMoodId(), group.getId());
     }
 
     private class GroupRowMapper implements RowMapper<Group> {

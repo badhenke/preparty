@@ -61,6 +61,12 @@ public interface UserDAO {
     int getGroupId(String id);
 
     /**
+     * Set group_id to NULL on user
+     * @param id of user
+     */
+    void setGroupNull(String id);
+
+    /**
      * Get all users in the same group.
      *
      * @param id of group

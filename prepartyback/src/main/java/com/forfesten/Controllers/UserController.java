@@ -5,6 +5,7 @@ import com.forfesten.Facebook.TokenStorage;
 import com.forfesten.Models.ErrorJson;
 import com.forfesten.Models.User;
 import com.forfesten.Models.UserInfo;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *  Controller handling user actions
+ * Controller handling user actions
  */
 @RestController
 @RequestMapping(value = "/api/user")
@@ -26,21 +27,22 @@ public class UserController {
 
     /**
      * Get information about a user.
+     *
      * @param userId of a user
      * @return Json of userdata
-    */
+     */
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity getUser(@RequestParam(value = "id") String userId){
+    public ResponseEntity getUser(@RequestParam(value = "id") String userId) {
 
-        if(userId.trim().length()<=0){
+        if (userId.trim().length() <= 0) {
             return new ResponseEntity(new ErrorJson("Unknown userId.", "Bad Request", HttpStatus.BAD_REQUEST, "GET /api/user"), HttpStatus.BAD_REQUEST);
         }
 
         User user = userDAOWrapper.getUserById(userId);
         UserInfo userInfo = userDAOWrapper.getUserInfoById(userId);
-        Map<String,Object> response = new HashMap<>();
+        Map<String, Object> response = new HashMap<>();
 
-        if(user == null || userInfo == null){
+        if (user == null || userInfo == null) {
             return new ResponseEntity(new ErrorJson("User does not exist.", "Bad Request", HttpStatus.BAD_REQUEST, "GET /api/user"), HttpStatus.BAD_REQUEST);
         }
 
@@ -57,60 +59,64 @@ public class UserController {
 
     /**
      * Update information about a user.
+     *
      * @param requestRaw is a json input from frontend
-     * @param code Authentication header
+     * @param code       Authentication header
      * @return HTTPStatus of success or not
      */
-    @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity updateUser(@RequestHeader(value="Authentication") String code,
-                                     @RequestBody String requestRaw){
+    @RequestMapping(method = RequestMethod.PATCH)
+    public ResponseEntity updateUser(@RequestHeader(value = "Authentication") String code,
+                                     @RequestBody String requestRaw) {
 
         JSONObject requestJson = new JSONObject(requestRaw);
         String userId = TokenStorage.getIdByCode(code);
 
-        boolean gpsLatitudeChanged=false, gpsLongitudeChanged=false, emailChanged=false, descriptionChanged=false;
-        String requestEmail=null, requestDescription=null;
-        Double requestGpsLatitude=null, requestGpsLongitude=null;
+        boolean gpsLatitudeChanged = false, gpsLongitudeChanged = false, emailChanged = false, descriptionChanged = false;
+        String requestEmail = null, requestDescription = null;
+        Double requestGpsLatitude = null, requestGpsLongitude = null;
 
-        if (requestJson.has("email")){
+        if (requestJson.has("email")) {
             requestEmail = requestJson.getString("email");
             emailChanged = true;
         }
-        if (requestJson.has("gps_latitude")) {
-            requestGpsLatitude = requestJson.getDouble("gps_latitude");
-            gpsLatitudeChanged = true;
+        try {
+            if (requestJson.has("gps_latitude")) {
+                requestGpsLatitude = requestJson.getDouble("gps_latitude");
+                gpsLatitudeChanged = true;
+            }
+            if (requestJson.has("gps_longitude")) {
+                requestGpsLongitude = requestJson.getDouble("gps_longitude");
+                gpsLongitudeChanged = true;
+            }
+        } catch (JSONException e) {
+            return new ResponseEntity(new ErrorJson("Mood must be a valid int.", "Not Acceptable", HttpStatus.NOT_ACCEPTABLE, "PATCH /api/user"), HttpStatus.NOT_ACCEPTABLE);
         }
-        if (requestJson.has("gps_longitude")){
-            requestGpsLongitude = requestJson.getDouble("gps_longitude");
-            gpsLongitudeChanged = true;
-        }
-        if (requestJson.has("description")){
+        if (requestJson.has("description")) {
             requestDescription = requestJson.getString("description");
             descriptionChanged = true;
         }
-        if(!emailChanged && !gpsLatitudeChanged && !gpsLongitudeChanged && !descriptionChanged){
-            return new ResponseEntity(new ErrorJson("No data entered.", "Bad Request", HttpStatus.BAD_REQUEST, "POST /api/user"), HttpStatus.BAD_REQUEST);
+        if (!emailChanged && !gpsLatitudeChanged && !gpsLongitudeChanged && !descriptionChanged) {
+            return new ResponseEntity(new ErrorJson("No data entered.", "Bad Request", HttpStatus.BAD_REQUEST, "PATCH /api/user"), HttpStatus.BAD_REQUEST);
         }
 
-        if(emailChanged && gpsLatitudeChanged && gpsLongitudeChanged && descriptionChanged){
+        if (emailChanged && gpsLatitudeChanged && gpsLongitudeChanged && descriptionChanged) {
             UserInfo userInfo = new UserInfo(userId, requestEmail, requestGpsLatitude, requestGpsLongitude, requestDescription);
             userDAOWrapper.updateUserInfoAll(userInfo);
             return new ResponseEntity(HttpStatus.OK);
         }
 
-        if(gpsLatitudeChanged && gpsLongitudeChanged){
+        if (gpsLatitudeChanged && gpsLongitudeChanged) {
             userDAOWrapper.updateUserInfoGps(userId, requestGpsLatitude, requestGpsLongitude);
         }
-        if(emailChanged){
+        if (emailChanged) {
             userDAOWrapper.updateUserInfoEmail(userId, requestEmail);
         }
-        if(descriptionChanged){
+        if (descriptionChanged) {
             userDAOWrapper.updateUserInfoDescription(userId, requestDescription);
         }
 
         return new ResponseEntity(HttpStatus.OK);
     }
-
 
 
 }
