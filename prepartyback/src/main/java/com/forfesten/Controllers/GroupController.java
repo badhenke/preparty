@@ -36,7 +36,7 @@ public class GroupController {
         Group group = groupDAOWrapper.getGroup(userId);
 
         if (group == null) {
-            return new ResponseEntity(new ErrorJson("Not in a group", "Bad Request", HttpStatus.NO_CONTENT, "POST /api/group"), HttpStatus.NO_CONTENT);
+            return new ResponseEntity(new ErrorJson("Not in a group", "Bad Request", HttpStatus.BAD_REQUEST, "POST /api/group"), HttpStatus.BAD_REQUEST);
         } else {
             return new ResponseEntity(group, HttpStatus.OK);
         }
@@ -122,11 +122,15 @@ public class GroupController {
             return new ResponseEntity(new ErrorJson("Wrong input.", "Not Acceptable", HttpStatus.NOT_ACCEPTABLE, "PATCH /api/group"), HttpStatus.NOT_ACCEPTABLE);
         }
 
-
         return new ResponseEntity(HttpStatus.OK);
     }
 
-
+    /**
+     * Drop the user from it's group. If group is empty it will be removed.
+     *
+     * @param code from user
+     * @return Status of action
+     */
     @RequestMapping(method = RequestMethod.DELETE)
     public ResponseEntity dropGroup(@RequestHeader(value = "Authentication") String code) {
 
