@@ -32,9 +32,9 @@ public interface UserDAO {
      * Gets a user from database, returns null if not exists.
      *
      * @param id of user
-     * @return User object
+     * @return User object, null if not exist
      */
-    User getUserById(String id);
+    User getById(String id);
 
     /**
      * Checks if a user exists in database.

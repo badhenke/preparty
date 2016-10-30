@@ -32,6 +32,7 @@ public class ApiController {
     @RequestMapping(value = "/logout")
     public ResponseEntity facebookLogout(@RequestHeader(value = "Authentication") String code) {
         TokenStorage.Remove(code);
+        System.out.println("Delete from token storage. TokenStorage size: " + TokenStorage.size());
         return new ResponseEntity(HttpStatus.OK);
     }
 }

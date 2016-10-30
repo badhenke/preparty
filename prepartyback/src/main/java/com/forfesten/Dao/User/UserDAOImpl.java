@@ -33,7 +33,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public User getUserById(String id) {
+    public User getById(String id) {
         String sqlquery = SQL_GET + "WHERE id=" + id;
         List<User> userList = jdbcTemplate.query(sqlquery, new UserRowMapper());
         if (userList.isEmpty()) {

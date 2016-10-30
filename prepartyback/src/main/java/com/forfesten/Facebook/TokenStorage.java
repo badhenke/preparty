@@ -91,4 +91,12 @@ public class TokenStorage {
             return null;
     }
 
+    /**
+     * Get size of users in tokenstorage
+     * @return size
+     */
+    public static int size(){
+        return tokenMap.size();
+    }
+
 }

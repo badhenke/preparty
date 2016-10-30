@@ -27,10 +27,10 @@ public class UserDAOWrapper {
     /**
      * Gets a User by its id.
      * @param id of User
-     * @return User object
+     * @return User object, Null if not exist
      */
     public User getUserById(String id){
-        return userDAO.getUserById(id);
+        return userDAO.getById(id);
     }
 
     /**
