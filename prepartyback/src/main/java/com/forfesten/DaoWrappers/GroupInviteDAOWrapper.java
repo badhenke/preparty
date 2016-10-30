@@ -9,7 +9,10 @@ import com.forfesten.Models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Wrapper for Group Invite Database interaction
@@ -69,7 +72,7 @@ public class GroupInviteDAOWrapper {
             throw new FullGroupException();
         }
 
-        GroupInvite groupInvite = groupInviteDAO.getGroupInvite(toUserId, groupId);
+        GroupInvite groupInvite = groupInviteDAO.get(toUserId, groupId);
         if (groupInvite != null) {
             throw new AlreadyHasInviteException();
         } else {
@@ -78,5 +81,16 @@ public class GroupInviteDAOWrapper {
         }
 
     }
+
+    /**
+     * Get ready-response data of all groupinvites a user has
+     * @param userId id of user
+     * @return response data
+     */
+    public List<Object> getGroupInvitesData(String userId) {
+        List<Object> dataList = groupInviteDAO.getAllFullData(userId);
+        return dataList;
+    }
+
 
 }

@@ -11,6 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Controller for Group Invites
  */
@@ -34,7 +37,7 @@ public class GroupInviteController {
         }
 
         try {
-            toUserId = requestJson.getString("toUserId") ;
+            toUserId = requestJson.getString("toUserId");
         } catch (JSONException e) {
             return new ResponseEntity(new ErrorJson("toUserId must be String.", "Bad Request", HttpStatus.BAD_REQUEST, "POST /api/groupinvite"), HttpStatus.BAD_REQUEST);
         }
@@ -61,4 +64,17 @@ public class GroupInviteController {
 
     }
 
+    /**
+     * Get all group invites for a user
+     *
+     * @param code usercode
+     * @return group invite full data
+     *
+     */
+    @RequestMapping(value = "/all", method = RequestMethod.GET)
+    public ResponseEntity getAllFullData(@RequestHeader(value = "Authentication") String code) {
+        String userId = TokenStorage.getIdByCode(code);
+        List<Object> response = groupInviteDAOWrapper.getGroupInvitesData(userId);
+        return new ResponseEntity(response, HttpStatus.OK);
+    }
 }

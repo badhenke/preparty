@@ -2,6 +2,8 @@ package com.forfesten.Dao.GroupInvite;
 
 import com.forfesten.Models.GroupInvite;
 
+import java.util.List;
+
 /**
  * Interface for Group Invite database interaction
  */
@@ -21,5 +23,15 @@ interface GroupInviteDAO {
      * @param groupId id of group
      * @return GroupInvite, Null if not exist.
      */
-    GroupInvite getGroupInvite(String userId, int groupId);
+    GroupInvite get(String userId, int groupId);
+
+    /**
+     * Get all users group invites
+     *
+     * @param userId of user
+     * @return List of invites
+     */
+    List<GroupInvite> getAll(String userId);
+
+    List<Object> getAllFullData(String userId);
 }
