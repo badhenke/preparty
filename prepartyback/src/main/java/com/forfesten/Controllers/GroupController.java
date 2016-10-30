@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.SQLException;
 
 /**
- * Created by heer on 08/10/2016.
+ * Controller fro group endpoints.
  */
 @RestController
 @RequestMapping(value = "/api/group")
@@ -40,7 +40,6 @@ public class GroupController {
         } else {
             return new ResponseEntity(group, HttpStatus.OK);
         }
-
     }
 
     /**
