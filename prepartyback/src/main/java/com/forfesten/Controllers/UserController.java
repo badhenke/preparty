@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.token.Token;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -32,10 +33,15 @@ public class UserController {
      * @return Json of userdata
      */
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity getUser(@RequestParam(value = "id") String userId) {
+    public ResponseEntity getUser(@RequestHeader(value = "Authentication") String code,
+                                  @RequestParam(value = "id", defaultValue = "me") String userId) {
 
         if (userId.trim().length() <= 0) {
             return new ResponseEntity(new ErrorJson("Unknown userId.", "Bad Request", HttpStatus.BAD_REQUEST, "GET /api/user"), HttpStatus.BAD_REQUEST);
+        }
+
+        if (userId.equals("me")) {
+            userId = TokenStorage.getIdByCode(code);
         }
 
         User user = userDAOWrapper.getUserById(userId);
@@ -52,6 +58,7 @@ public class UserController {
         response.put("gps_latitude", userInfo.getGps_latitude());
         response.put("gps_longitude", userInfo.getGps_longitude());
         response.put("group_id", user.getGroupId());
+        response.put("description", userInfo.getDescription());
         response.put("created", userInfo.getCreated());
 
         return new ResponseEntity(response, HttpStatus.OK);
