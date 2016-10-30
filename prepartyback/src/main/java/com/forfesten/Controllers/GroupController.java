@@ -59,12 +59,12 @@ public class GroupController {
         String description = null;
         int moodId = -1;
 
-        if (!requestJson.has("description") || !requestJson.has("moodId")) {
+        if (!requestJson.has("description") || !requestJson.has("mood_id")) {
             return new ResponseEntity(new ErrorJson("Not correct input.", "Bad Request", HttpStatus.BAD_REQUEST, "POST /api/group"), HttpStatus.BAD_REQUEST);
         }
 
         description = requestJson.getString("description");
-        moodId = requestJson.getInt("moodId");
+        moodId = requestJson.getInt("mood_id");
         boolean addGroupStatus = false;
 
         try {
@@ -94,7 +94,7 @@ public class GroupController {
         JSONObject requestJson = new JSONObject(requestRaw);
         String userId = TokenStorage.getIdByCode(code);
 
-        if (!requestJson.has("description") && !requestJson.has("moodId")) {
+        if (!requestJson.has("description") && !requestJson.has("mood_id")) {
             return new ResponseEntity(new ErrorJson("No input.", "No Content", HttpStatus.NO_CONTENT, "PATCH /api/group"), HttpStatus.NO_CONTENT);
         }
 
@@ -108,7 +108,7 @@ public class GroupController {
 
         description = requestJson.getString("description");
         try {
-            moodId = requestJson.getInt("moodId");
+            moodId = requestJson.getInt("mood_id");
         } catch (JSONException e) {
             return new ResponseEntity(new ErrorJson("Mood must be a valid int.", "Not Acceptable", HttpStatus.NOT_ACCEPTABLE, "PATCH /api/group"), HttpStatus.NOT_ACCEPTABLE);
         }

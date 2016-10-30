@@ -77,4 +77,19 @@ public class GroupInviteController {
         List<Object> response = groupInviteDAOWrapper.getGroupInvitesData(userId);
         return new ResponseEntity(response, HttpStatus.OK);
     }
+
+
+    @RequestMapping(value = "/join", method = RequestMethod.POST)
+    public ResponseEntity joinGroup(@RequestHeader(value = "Authentication") String code,
+                                    @RequestBody String requestRaw){
+
+        JSONObject requestJson = new JSONObject(requestRaw);
+        String userId = TokenStorage.getIdByCode(code);
+
+        if(requestJson.has("groupId")){
+
+        }
+        return null;
+    }
+
 }
