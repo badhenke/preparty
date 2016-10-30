@@ -28,10 +28,24 @@ interface GroupInviteDAO {
     /**
      * Get all users group invites
      *
-     * @param userId of user
+     * @param userId id of user
      * @return List of invites
      */
     List<GroupInvite> getAll(String userId);
 
+    /**
+     * Get combined data for groupinvite, group and mood for groupinvites for a user
+     *
+     * @param userId id of user
+     * @return List of all data
+     */
     List<Object> getAllFullData(String userId);
+
+    /**
+     * Deletes a groupinvite
+     *
+     * @param userId  id of user
+     * @param groupId id of group
+     */
+    void deleteInvite(String userId, int groupId);
 }

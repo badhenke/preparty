@@ -1,5 +1,6 @@
 package com.forfesten.Controllers;
 
+import com.forfesten.DaoWrappers.GroupDAOWrapper;
 import com.forfesten.DaoWrappers.GroupInviteDAOWrapper;
 import com.forfesten.Exceptions.*;
 import com.forfesten.Facebook.TokenStorage;
@@ -32,14 +33,14 @@ public class GroupInviteController {
         String userId = TokenStorage.getIdByCode(code);
         String toUserId = null;
 
-        if (!requestJson.has("toUserId")) {
-            return new ResponseEntity(new ErrorJson("toUserId does not exist.", "Bad Request", HttpStatus.BAD_REQUEST, "POST /api/groupinvite"), HttpStatus.BAD_REQUEST);
+        if (!requestJson.has("to_user_id")) {
+            return new ResponseEntity(new ErrorJson("to_user_id does not exist.", "Bad Request", HttpStatus.BAD_REQUEST, "POST /api/groupinvite"), HttpStatus.BAD_REQUEST);
         }
 
         try {
-            toUserId = requestJson.getString("toUserId");
+            toUserId = requestJson.getString("to_user_id");
         } catch (JSONException e) {
-            return new ResponseEntity(new ErrorJson("toUserId must be String.", "Bad Request", HttpStatus.BAD_REQUEST, "POST /api/groupinvite"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(new ErrorJson("to_user_id must be String.", "Bad Request", HttpStatus.BAD_REQUEST, "POST /api/groupinvite"), HttpStatus.BAD_REQUEST);
         }
 
         try {
@@ -69,7 +70,6 @@ public class GroupInviteController {
      *
      * @param code usercode
      * @return group invite full data
-     *
      */
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public ResponseEntity getAllFullData(@RequestHeader(value = "Authentication") String code) {
@@ -78,18 +78,38 @@ public class GroupInviteController {
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
-
+    /**
+     * Join a group if user has access to it.
+     *
+     * @param code       usercode
+     * @param requestRaw Json of group_id
+     * @return Status
+     */
     @RequestMapping(value = "/join", method = RequestMethod.POST)
     public ResponseEntity joinGroup(@RequestHeader(value = "Authentication") String code,
-                                    @RequestBody String requestRaw){
+                                    @RequestBody String requestRaw) {
 
         JSONObject requestJson = new JSONObject(requestRaw);
         String userId = TokenStorage.getIdByCode(code);
 
-        if(requestJson.has("groupId")){
-
+        if (!requestJson.has("group_id")) {
+            return new ResponseEntity(new ErrorJson("group_id is missing.", "Bad Request", HttpStatus.BAD_REQUEST, "POST /api/groupinvite/join"), HttpStatus.BAD_REQUEST);
         }
-        return null;
+
+        int groupId = requestJson.getInt("group_id");
+        try {
+
+            groupInviteDAOWrapper.joinGroup(userId, groupId);
+        } catch (Exception e) {
+
+            if (e instanceof NoInviteException) {
+                return new ResponseEntity(new ErrorJson("User does not have invitation to group.", "Bad Request", HttpStatus.BAD_REQUEST, "POST /api/groupinvite/join"), HttpStatus.BAD_REQUEST);
+            } else if (e instanceof FullGroupException) {
+                return new ResponseEntity(new ErrorJson("Group is full.", "Bad Request", HttpStatus.BAD_REQUEST, "POST /api/groupinvite/join"), HttpStatus.BAD_REQUEST);
+            }
+        }
+
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
 
 }

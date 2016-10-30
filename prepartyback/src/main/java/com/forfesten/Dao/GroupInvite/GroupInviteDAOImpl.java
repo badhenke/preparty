@@ -27,6 +27,7 @@ public class GroupInviteDAOImpl implements GroupInviteDAO {
             "ON groups.id = groupinvites.group_id " +
             "INNER JOIN moods " +
             "ON moods.id = groups.mood_id ";
+    private static final String SQL_DELETE = "DELETE FROM groupinvites WHERE user_id=? AND group_id=?";
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -58,6 +59,11 @@ public class GroupInviteDAOImpl implements GroupInviteDAO {
         String sql = SQL_GET_FULLDATA + " WHERE user_id=" + userId;
         List<Object> groupInviteDataList = jdbcTemplate.query(sql, new GroupInviteFullRowMapper());
         return groupInviteDataList;
+    }
+
+    @Override
+    public void deleteInvite(String userId, int groupId) {
+        jdbcTemplate.update(SQL_DELETE, userId, groupId);
     }
 
     private class GroupInviteRowMapper implements RowMapper<GroupInvite> {

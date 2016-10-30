@@ -29,14 +29,16 @@ public class GroupInviteDAOWrapper {
     @Autowired
     UserDAOImpl userDAO;
 
-
     /**
-     * Sends a group invite to a user and stores an invite in database.
+     * Sends a group invitation to a user from a user.
      *
-     * @param fromUserId id of sender
-     * @param toUserId   if of receiver
-     * @throws AlreadyInGroupException if sender is in group
-     * @throws FullGroupException      if the group is full
+     * @param fromUserId from id
+     * @param toUserId   to id
+     * @throws AlreadyInGroupException   If user already in group
+     * @throws FullGroupException        If group is full
+     * @throws NotInGroupException       If user is not in a group
+     * @throws UserNotExistException     If the toUser does not exist
+     * @throws AlreadyHasInviteException If user already has the same invitation
      */
     public void sendGroupInvite(String fromUserId, String toUserId) throws
             AlreadyInGroupException,
@@ -68,7 +70,7 @@ public class GroupInviteDAOWrapper {
             throw new AlreadyInGroupException();
         }
 
-        if (usersInGroupList.size() >= 4) {
+        if (usersInGroupList.size() > 4) {
             throw new FullGroupException();
         }
 
@@ -79,18 +81,49 @@ public class GroupInviteDAOWrapper {
             groupInvite = new GroupInvite(toUserId, groupId);
             groupInviteDAO.save(groupInvite);
         }
-
     }
 
     /**
      * Get ready-response data of all groupinvites a user has
+     *
      * @param userId id of user
      * @return response data
      */
     public List<Object> getGroupInvitesData(String userId) {
+
         List<Object> dataList = groupInviteDAO.getAllFullData(userId);
         return dataList;
     }
 
+    /**
+     * Join a group if invited. If already in a group and is the last one there, the old group will be deleted.
+     *
+     * @param userId  id of user
+     * @param groupId id of group
+     * @throws NoInviteException  If user does not have an invite
+     * @throws FullGroupException If the group is full
+     */
+    public void joinGroup(String userId, int groupId) throws NoInviteException, FullGroupException {
 
+        GroupInvite groupInvite = groupInviteDAO.get(userId, groupId);
+        if (groupInvite == null) {
+            throw new NoInviteException();
+        }
+
+        List<User> usersInGroupList = userDAO.getAllByGroupId(groupId);
+        if (usersInGroupList.size() > 4) {
+            throw new FullGroupException();
+        }
+
+        int oldGroupId = userDAO.getGroupId(userId);
+
+        groupInviteDAO.deleteInvite(userId, groupId);
+        userDAO.setGroupId(userId, groupId);
+
+        List<User> userList = userDAO.getAllByGroupId(oldGroupId);
+        if (userList.isEmpty()) {
+            groupDAO.deleteGroup(oldGroupId);
+        }
+
+    }
 }
