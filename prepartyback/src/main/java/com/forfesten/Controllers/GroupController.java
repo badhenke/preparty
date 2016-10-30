@@ -1,6 +1,7 @@
 package com.forfesten.Controllers;
 
 import com.forfesten.DaoWrappers.GroupDAOWrapper;
+import com.forfesten.Exceptions.GroupNotExistException;
 import com.forfesten.Facebook.TokenStorage;
 import com.forfesten.Models.ErrorJson;
 import com.forfesten.Models.Group;
@@ -10,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.sql.SQLException;
 
 /**
  * Controller fro group endpoints.
@@ -24,16 +23,32 @@ public class GroupController {
     GroupDAOWrapper groupDAOWrapper;
 
     /**
-     * Get the group that a user has joined or created.
+     * Get a group
      *
      * @param code from user
      * @return Group if exists, Null otherwise.
      */
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity getGroup(@RequestHeader(value = "Authentication") String code) {
+    public ResponseEntity getGroup(@RequestHeader(value = "Authentication") String code,
+                                   @RequestParam(value = "group_id", defaultValue = "my") String groupId) {
 
         String userId = TokenStorage.getIdByCode(code);
-        Group group = groupDAOWrapper.getGroup(userId);
+
+        Group group = null;
+        if (groupId.equals("my")) {
+            group = groupDAOWrapper.getGroupForUser(userId);
+        } else {
+            int groupIdInt;
+            try {
+                groupIdInt = Integer.parseInt(groupId);
+                group = groupDAOWrapper.getGroup(groupIdInt);
+            } catch (Exception e) {
+                if (e instanceof NumberFormatException)
+                    return new ResponseEntity(new ErrorJson("groupId must be integer.", "Bad Request", HttpStatus.BAD_REQUEST, "POST /api/group"), HttpStatus.BAD_REQUEST);
+                else if (e instanceof GroupNotExistException)
+                    return new ResponseEntity(new ErrorJson("Group does not exist.", "Bad Request", HttpStatus.BAD_REQUEST, "POST /api/group"), HttpStatus.BAD_REQUEST);
+            }
+        }
 
         if (group == null) {
             return new ResponseEntity(new ErrorJson("Not in a group", "Bad Request", HttpStatus.BAD_REQUEST, "POST /api/group"), HttpStatus.BAD_REQUEST);
@@ -98,7 +113,7 @@ public class GroupController {
             return new ResponseEntity(new ErrorJson("No input.", "No Content", HttpStatus.NO_CONTENT, "PATCH /api/group"), HttpStatus.NO_CONTENT);
         }
 
-        Group group = groupDAOWrapper.getGroup(userId);
+        Group group = groupDAOWrapper.getGroupForUser(userId);
         if (group == null) {
             return new ResponseEntity(new ErrorJson("Not in a group.", "Bad Request", HttpStatus.BAD_REQUEST, "PATCH /api/group"), HttpStatus.BAD_REQUEST);
         }
@@ -135,7 +150,7 @@ public class GroupController {
 
         String userId = TokenStorage.getIdByCode(code);
 
-        Group group = groupDAOWrapper.getGroup(userId);
+        Group group = groupDAOWrapper.getGroupForUser(userId);
         if (group == null) {
             return new ResponseEntity(new ErrorJson("Not in a group.", "Bad Request", HttpStatus.BAD_REQUEST, "DELETE /api/group"), HttpStatus.BAD_REQUEST);
         }

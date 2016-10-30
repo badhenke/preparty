@@ -2,6 +2,7 @@ package com.forfesten.DaoWrappers;
 
 import com.forfesten.Dao.Group.GroupDAOImpl;
 import com.forfesten.Dao.User.UserDAOImpl;
+import com.forfesten.Exceptions.GroupNotExistException;
 import com.forfesten.Models.Group;
 import com.forfesten.Models.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,16 +46,33 @@ public class GroupDAOWrapper {
     /**
      * Get group that user has joined. Null if not in a group.
      *
-     * @param id of user
+     * @param userId of user
      * @return Group
      */
-    public Group getGroup(String id) {
-        int groupId = userDAO.getGroupId(id);
+    public Group getGroupForUser(String userId) {
+        int groupId = userDAO.getGroupId(userId);
         if (groupId <= 0) {
             return null;
         } else {
             return groupDAO.getById(groupId);
         }
+    }
+
+    /**
+     * Get Group by group id.
+     *
+     * @param groupId Id of group
+     * @return Group
+     * @throws GroupNotExistException If group does not exist
+     */
+    public Group getGroup(int groupId) throws GroupNotExistException {
+
+        Group group = groupDAO.getById(groupId);
+        if (group == null) {
+            throw new GroupNotExistException();
+        }
+
+        return group;
     }
 
     /**
